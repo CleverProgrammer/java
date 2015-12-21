@@ -13,15 +13,6 @@ String[] studentNames = {"Jakob Baloski",
 "Leona Rhee"
 };
 
-studentScores is a 2 dimensional array of doubles,  where each row represents an array with a single student's scores.
-
-The 1st element in a row is that student's score on Assignment #1, the next element  in that row is that student's
-score on Assignment #2, etc.
-
-studentNames is a 1 dimensional array of Strings. The 1st element  is the name of the student whose scores are in the
-1st row ofstudentScores.
-The 2nd element  is the name of the student whose scores are in the 2nd row of studentScores, etc.
-
 Your app is going to generate the following output to the console:
 
 Jakob Baloski
@@ -89,8 +80,10 @@ Lowest Score = 65.0
 Mean = 84.0 Grade:B
 Mean (lowest dropped) = 88.75
 -------------------------------------
- * Created by Rafeh on 12/17/15.
  */
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -110,13 +103,16 @@ public class Main {
                 "Yusef Goldstein",
                 "Leona Rhee"
         };
+        List<List<Double>> assignmentScores = colsToRows(studentScores);
 
+        // PRINT STUDENT RESULTS
         int i = 0;
         for(double[] score : studentScores) {
             System.out.println(studentNames[i]);
             System.out.println("Highest score = " + max(score));
             System.out.println("Lowest score = " + min(score));
-            System.out.println("Mean = " + mean(score));
+            System.out.println("Mean = " + mean(score) + " Grade:" + gradeLetter(mean(score)));
+            System.out.println("Mean (lowest dropped) = " + meanLowDrop(score));
             System.out.println("-------------------------------------");
             i++;
         }
@@ -125,12 +121,26 @@ public class Main {
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++");
         System.out.println();
         System.out.println();
+
+        // PRINT ASSIGNMENT RESULTS
+        int j = 1;
+        for (List<Double> aScore : assignmentScores) {
+            // converting from List<Double> to double[]
+            // http://stackoverflow.com/questions/6018267/how-to-cast-from-listdouble-to-double-in-java
+            double[] row = aScore.stream().mapToDouble(Double::doubleValue).toArray();  // converting to a normal array.
+            System.out.println("Assignment: " + j);
+            System.out.println("Highest score = " + max(row));
+            System.out.println("Lowest score = " + min(row));
+            System.out.println("Mean = " + mean(row) + " Grade:" + gradeLetter(mean(row)));
+            System.out.println("Mean (lowest dropped) = " + meanLowDrop(row));
+            System.out.println("-------------------------------------");
+            j++;
+        }
     }
 
-
     /**
-     * get the largest number from a list of numbers.
-     * @param numbers list.
+     * get the largest number from an array of numbers.
+     * @param numbers array.
      * @return double.
      */
     public static double max(double[] numbers) {
@@ -144,8 +154,8 @@ public class Main {
     }
 
     /**
-     * get the smallest number from a list of numbers.
-     * @param numbers list.
+     * get the smallest number from an array of numbers.
+     * @param numbers array.
      * @return double.
      */
     public static double min(double[] numbers) {
@@ -159,8 +169,8 @@ public class Main {
     }
 
     /**
-     * get the mean of all the numbers in the list.
-     * @param numbers list.
+     * get the mean of all the numbers in the array.
+     * @param numbers array.
      * @return double.
      */
     public static double mean(double[] numbers) {
@@ -170,7 +180,51 @@ public class Main {
         }
         return sum / numbers.length;
     }
+
+    public static double meanLowDrop(double[] numbers) {
+        double lowestGrade = min(numbers);
+        double sum = 0;
+        for (double number : numbers) {
+            sum += number;
+        }
+        return (sum - lowestGrade) / (numbers.length - 1);
+    }
+
+    /**
+     * return a grade letter based on the student's mean grade.
+     * @param mean double.
+     * @return char.
+     */
+    public static char gradeLetter(double mean) {
+        char result;
+        if (mean >= 90) {
+            result = 'A';
+        } else if (mean >= 80) {
+            result = 'B';
+        } else if (mean >= 70) {
+            result = 'C';
+        } else if (mean >= 65) {
+            result = 'D';
+        } else {
+            result = 'F';
+        }
+        return result;
+    }
+
+    /**
+     * access columns of a 2d array and return them as rows in an array.
+     * @param studentGrades 2d array
+     * @return array
+     */
+    public static List<List<Double>> colsToRows(double[][] studentGrades) {
+        List<List<Double>> rows = new ArrayList<>();
+        for (int i = 0; i < studentGrades.length; i++) {
+            List<Double> temp = new ArrayList<>();
+            for (double[] studentGrade : studentGrades) {
+                temp.add(studentGrade[i]);
+            }
+            rows.add(temp);
+        }
+        return rows;
+    }
 }
-
-
-
