@@ -82,9 +82,6 @@ Mean (lowest dropped) = 88.75
 -------------------------------------
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -103,7 +100,12 @@ public class Main {
                 "Yusef Goldstein",
                 "Leona Rhee"
         };
-        List<List<Double>> assignmentScores = colsToRows(studentScores);
+
+        printStats(studentScores, studentNames);
+    }
+
+        public static void printStats(double[][] studentScores, String[] studentNames) {
+        double[][] assignmentScores = colsToRows(studentScores);
 
         // PRINT STUDENT RESULTS
         int i = 0;
@@ -124,15 +126,12 @@ public class Main {
 
         // PRINT ASSIGNMENT RESULTS
         int j = 1;
-        for (List<Double> aScore : assignmentScores) {
-            // converting from List<Double> to double[]
-            // http://stackoverflow.com/questions/6018267/how-to-cast-from-listdouble-to-double-in-java
-            double[] row = aScore.stream().mapToDouble(Double::doubleValue).toArray();  // converting to a normal array.
+        for (double[] aScore : assignmentScores) {
             System.out.println("Assignment: " + j);
-            System.out.println("Highest score = " + max(row));
-            System.out.println("Lowest score = " + min(row));
-            System.out.println("Mean = " + mean(row) + " Grade:" + gradeLetter(mean(row)));
-            System.out.println("Mean (lowest dropped) = " + meanLowDrop(row));
+            System.out.println("Highest score = " + max(aScore));
+            System.out.println("Lowest score = " + min(aScore));
+            System.out.println("Mean = " + mean(aScore) + " Grade:" + gradeLetter(mean(aScore)));
+            System.out.println("Mean (lowest dropped) = " + meanLowDrop(aScore));
             System.out.println("-------------------------------------");
             j++;
         }
@@ -213,18 +212,17 @@ public class Main {
 
     /**
      * access columns of a 2d array and return them as rows in an array.
-     * @param studentGrades 2d array
+     * @param arr 2d array
      * @return array
      */
-    public static List<List<Double>> colsToRows(double[][] studentGrades) {
-        List<List<Double>> rows = new ArrayList<>();
-        for (int i = 0; i < studentGrades.length; i++) {
-            List<Double> temp = new ArrayList<>();
-            for (double[] studentGrade : studentGrades) {
-                temp.add(studentGrade[i]);
+    public static double[][] colsToRows(double[][] arr) {
+        double[][] transposed = new double[arr.length][arr[0].length];
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                transposed[i][j] = arr[j][i];
             }
-            rows.add(temp);
         }
-        return rows;
+        return transposed;
     }
 }
