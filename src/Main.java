@@ -104,12 +104,18 @@ public class Main {
         printStats(studentScores, studentNames);
     }
 
-        public static void printStats(double[][] studentScores, String[] studentNames) {
+    /**
+     * takes in student scores and student names as input. It prints the statistical summary of student grades
+     * and all the assignments.
+     * @param studentScores double[][]
+     * @param studentNames String[]
+     */
+    public static void printStats(double[][] studentScores, String[] studentNames) {
         double[][] assignmentScores = colsToRows(studentScores);
 
         // PRINT STUDENT RESULTS
         int i = 0;
-        for(double[] score : studentScores) {
+        for (double[] score : studentScores) {
             System.out.println(studentNames[i]);
             System.out.println("Highest score = " + max(score));
             System.out.println("Lowest score = " + min(score));
@@ -118,6 +124,7 @@ public class Main {
             System.out.println("-------------------------------------");
             i++;
         }
+
         System.out.println();
         System.out.println();
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++");
